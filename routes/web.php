@@ -50,3 +50,6 @@ Route::resource('order', OrderController::class);
 Route::resource('orderProduct', OrderProductController::class);
 
 Route::resource('post', PostController::class);
+
+Route::get('upload-image', [UploadImageController::class, 'index']);
+Route::post('save', [UploadImageController::class, 'save']);

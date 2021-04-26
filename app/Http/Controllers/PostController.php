@@ -4,28 +4,16 @@ namespace App\Http\Controllers;
 
 use App\Models\Post;
 use Illuminate\Http\Request;
-
+use Intervention\Image\ImageManagerStatic as Image;
 class PostController extends Controller
 {
-    //only authenticated user can acess
-    public function __construct()
-    {
-        $this->middleware('auth')->only('create');
-        $this->middleware('auth')->only('edit');
-        $this->middleware('auth')->only('destroy');
-    }
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-  
     public function index()
     {
         //
 
-        $post = Post::get();
-        return view('post.index', compact('post'));
+        // $posts = Post::where('title','!=','')->get();
+           $post = Post::whereNotNull('title')->get();
+           return view('home', compact('post'));
 
     }
 
@@ -48,13 +36,36 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
-       // dd($request);
+
+        // $request->validate([
+        //    'title' => 'required|unique:posts|max:255',
+        //     'description' => 'required',
+        // ]);
+ 
+        if($request->hasFile('img')){
+           
+                  
+            // Get just filename
+            $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
+            // Get just ext
+            $extension = $request->file('img')->getClientOriginalExtension();
+            // Filename to store
+            $fileNameToStore = $filename.'_'.time().'.'.$extension;
+            //Upload Image
+            // $path = $request->file('image')->move(public_path('/residents'), $fileNameToStore);
+            $path = $request->file('img')->storeAs('public/img', $fileNameToStore);
+            // $path = $request->file('image')->move(base_path('public_html/residents'), $fileNameToStore);
+        } else {
+            $fileNameToStore = 'noimage.png';
+        }
+
+    //    dd($request);
         $post = new Post();
-        $post->title = $request->title;
-        $post->description = $request->description;
+        $post->fill($request->all());
+        $post->img = $fileNameToStore;
         $post->save();
 
-        return redirect('/post');
+        return redirect('/home');
     }
 
     /**
@@ -63,13 +74,13 @@ class PostController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Post $post)
     {
         //
-        $post = Post::find($id);
-               //select * from users where id = $id
+        // $post = Post::find($id);
+       //select * from users where id = $id
       
-        return view('post.show', compact('post'));
+        return view('home', compact('post'));
 
     }
 
@@ -79,10 +90,10 @@ class PostController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Post $post)
     {
         //
-        $post = Post::find($id);
+        // $post = Post::find($id);
         //select * from users where id = $id
 
         return view('post.edit', compact('post'));
@@ -95,10 +106,10 @@ class PostController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Post $post)
     {
         //
-        $post = Post::find($id);
+        // $post = Post::find($id);
         $post->title = $request->title;
         $post->description = $request->description;
         $post->save();
@@ -112,12 +123,13 @@ class PostController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Post $post)
     {
         //
-        $post = Post::find($id);
+        // $post = Post::find($id);
         $post->delete();
 
         return redirect('/home');
     }
 }
+

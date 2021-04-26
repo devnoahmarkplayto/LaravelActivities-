@@ -19,6 +19,7 @@ class Post extends Migration
           
             $table->string('title')->unique();
             $table->longText('description');
+            $table->string('img')->nullable();
             $table->timestamps();
             
 
@@ -33,5 +34,8 @@ class Post extends Migration
     public function down()
     {
         //
+        Schema::table('posts', function(Blueprint $table) {
+            $table->dropColumn('img');
+        });
     }
 }
