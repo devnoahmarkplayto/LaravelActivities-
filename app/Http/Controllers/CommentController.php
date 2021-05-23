@@ -34,13 +34,11 @@ class CommentController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {
-        $input = $request->all();
+    {   $input = $request->all();
         $input['user_id'] = auth()->user()->id;
         $input['parent_id'] = isset($request->parent_id) ? $request->parent_id : null;
 
         Comment::create($input);
-
         return back();
     }
 

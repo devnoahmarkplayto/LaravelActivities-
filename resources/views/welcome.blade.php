@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>
+    
+        <meta name="_token" content="{{ csrf_token() }}">
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-
         <title>Laravel</title>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
         <!-- Fonts -->
         <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
@@ -22,12 +24,13 @@
             }
         </style>
     </head>
+    <!--header-->
     <body class="antialiased">
         <div class="relative flex items-top justify-center min-h-screen bg-gray-100 dark:bg-gray-900 sm:items-center py-4 sm:pt-0">
             @if (Route::has('login'))
                 <div class="hidden fixed top-0 right-0 px-6 py-4 sm:block">
                     @auth
-                        <a href="{{ url('/home') }}" class="text-sm text-gray-700 underline">Home</a>
+                        <a href="{{ url('/home') }}" class="text-sm text-gray-700 underline"><h5 class="display-5">Create New Forum</h5></a>
                     @else
                         <a href="{{ route('login') }}" class="text-sm text-gray-700 underline">Log in</a>
 
@@ -37,23 +40,56 @@
                     @endauth
                 </div>
             @endif
-
+     <!--header-->
+            <!--Search-->
             <div class="max-w-6xl mx-auto sm:px-6 lg:px-8">
+
+            <div class="container">
+            <h1>Forum list</h1>
+            </div>
+
+               
+                    <div class="col-12">
+
+                    <div class="card my-4">
+                    
+                        <h5 class="card-header">Search</h5>
+                     
+                            <form class="card-body" action="/search" method="GET" role="search">
+                                {{ csrf_field() }}
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Search for..." name="search" id="search">
+                        <span class="input-group-btn">
+                            <button class="btn btn-secondary" type="submit">Go!</button>
+                        </span>
+                     
+                    </div>
+                    </div>
+                    </form>
+                </div>
+                <br>
+            
+        
+                
+            <!--Search-->
+
+            <!--Forum List-->
                 <div class="container">
                         @foreach ($posts as $post)
                         <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title"><b>Title:</b> {{ $post->Title }}</h5>
+                                <p class="card-text"><b>Description:</b> {{ $post->Description }}</p>
                                 @if ($post->img != '')
-                                <img style="width:500px" class="card-img-top" src="{{ asset('/storage/img/'. $post->img) }}" alt="Card image cap" width="50%">
+                                <img style="width:100px" class="card-img-top" src="{{ asset('/storage/img/'. $post->img) }}" alt="Card image cap" width="50%">
                             
                                 @endif
-                            <div class="card-body">
-                                <h5 class="card-title">{{ $post->title }}</h5>
-                                <p class="card-text">{{ $post->description }}</p>
-                                <a href="{{ route('posts.show', $post->id) }}" class="btn btn-primary">View Post</a>
+                               
                             </div>
                      
                             <div class="card-footer">
-                               <small class="text-muted">Last updated {{ $post->updated_at }}</small>
+                            <a href="{{ route('posts.show', $post->id) }}" class="btn btn-primary">View Post</a><br>
+                            <small class="text-muted">Last updated {{ $post->updated_at }}</small>
                             </div>
                         </div>
                         <div class="clearfix"><br></div>     
@@ -61,5 +97,12 @@
                 </div>
             </div>
         </div>
+          <!--Forum List-->
+
+        
+          <!--Test-->
+          
+
+  
     </body>
 </html>

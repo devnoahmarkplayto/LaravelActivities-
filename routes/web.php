@@ -26,3 +26,4 @@ Auth::routes();
 // Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::resource('posts', PostController::class);
 Route::resource('comments', CommentController::class);
+Route::get('/search', [PostController::class, 'search']);

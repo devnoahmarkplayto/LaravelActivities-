@@ -4,7 +4,9 @@
     
     <div class="container">
         <div class="row justify-content-center">
+     
             <div class="col-md-8">
+           
                 <a class="btn btn-info" href="/posts/create">Create New</a>
                 <br><br>
                 <div class="card">
